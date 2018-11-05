@@ -644,7 +644,7 @@ class AADSSO {
 		$html = '<p class="aadsso-login-form-text">';
 		$html .= '<a href="%s">';
 		$html .= sprintf( __( 'Sign in with your %s account', 'aad-sso-wordpress' ),
-		                  htmlentities( $this->settings->org_display_name ) );
+				                  htmlentities( $this->settings->org_display_name ) );
 		$html .= '</a><br /><a class="dim" href="%s">'
 		         . __( 'Sign out', 'aad-sso-wordpress' ) . '</a></p>';
 		printf(

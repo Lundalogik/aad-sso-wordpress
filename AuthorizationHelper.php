@@ -19,6 +19,10 @@ class AADSSO_AuthorizationHelper
 	 * @return string The authorization URL.
 	 */
 	public static function get_authorization_url( $settings, $antiforgery_id ) {
+		$redirect_uri = $settings->redirect_uri;
+		if ($redirect_uri == 'auto')
+			$redirect_uri = wp_login_url();
+			
 		$auth_url = $settings->authorization_endpoint . '?'
 		 . http_build_query( array(
 					'response_type' => 'code',
@@ -26,7 +30,7 @@ class AADSSO_AuthorizationHelper
 					'domain_hint'   => $settings->org_domain_hint,
 					'client_id'     => $settings->client_id,
 					'resource'      => $settings->graph_endpoint,
-					'redirect_uri'  => $settings->redirect_uri,
+					'redirect_uri'  => $redirect_uri,
 					'state'         => $antiforgery_id,
 					'nonce'         => $antiforgery_id,
 				) );
@@ -44,12 +48,16 @@ class AADSSO_AuthorizationHelper
 	 */
 	public static function get_access_token( $code, $settings ) {
 
+		$redirect_uri = $settings->redirect_uri;
+		if ($redirect_uri == 'auto')
+			$redirect_uri = wp_login_url();
+
 		// Construct the body for the access token request
 		$authentication_request_body = http_build_query(
 			array(
 				'grant_type'    => 'authorization_code',
 				'code'          => $code,
-				'redirect_uri'  => $settings->redirect_uri,
+				'redirect_uri'  => $redirect_uri,
 				'resource'      => $settings->graph_endpoint,
 				'client_id'     => $settings->client_id,
 				'client_secret' => $settings->client_secret
